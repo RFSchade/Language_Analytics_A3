@@ -4,3 +4,5 @@
 
 # Ignore data in the 'in' folder
 in/**
+!in/.gitkeep 
+
