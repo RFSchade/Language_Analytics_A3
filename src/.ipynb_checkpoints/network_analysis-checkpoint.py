@@ -10,7 +10,6 @@ import os
 import pandas as pd
 from collections import Counter
 from itertools import combinations 
-from tqdm import tqdm
 
 # Network analysis tools
 import networkx as nx
@@ -27,7 +26,7 @@ import argparse
 from tqdm import tqdm
 
 #====> Define functions
-# > Am I inputting a directory or a csv file? Either way, save to list
+# > Gather files in directory
 def gather_files(user_input):
     path_to_dir = os.path.join("in", user_input)
     file_list = os.listdir(path_to_dir)
@@ -71,7 +70,7 @@ def parse_arg():
     # Initialize argparse
     ap = argparse.ArgumentParser()
     # Commandline parameters 
-    ap.add_argument("-i", "--input", required=True, help="file or directory to be analyzed")
+    ap.add_argument("-i", "--input", required=True, help="Input data for the script - either a file or directory")
     # Parse argument
     arg = vars(ap.parse_args())
     # return list of argumnets 
@@ -79,24 +78,41 @@ def parse_arg():
     
 #=====> Define main()
 def main(): 
+    # Define user input
     user_input = parse_arg()["input"]
     
+    # Print info
+    print("[INFO] Drawing networks...")
+    
+    # If the user input is a single file
     if re.search("\.csv$", user_input):
+        # Get filename
         file = user_input
+        # Load graph-object
         G = load_net(file)
+        # Create figure
         save_figure(G, file[:-4])
+        # Get centrality scores
         centrality_scores(G, file[:-4])
-        
+    
+    # if user input is a directory
     else: 
+        # Gather files in directory
         file_list = gather_files(user_input)
     
+        # Iterate over files
         for file in tqdm(file_list):
+            # Load graph-object
             G = load_net(f"{user_input}/{file}")
+            # Create figure
             save_figure(G, file[:-4])
+            # Get centrality scores
             centrality_scores(G, file[:-4])
+    
+    # Print info
+    print("[INFO] Job complete")
 
 # Run main() function from terminal only
 if __name__ == "__main__":
     main()
     
-# To be tested!
