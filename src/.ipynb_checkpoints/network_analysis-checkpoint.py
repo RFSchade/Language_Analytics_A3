@@ -49,6 +49,8 @@ def save_figure(G, filename):
     outpath = os.path.join('output', f'{filename}_net.png')
     # Save figure 
     plt.savefig(outpath, dpi=100, bbox_inches="tight")
+    # Clear plot
+    plt.clf()
     
 # > Get Centrality scores
 def centrality_scores(G, filename):
